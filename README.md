@@ -4,6 +4,9 @@
     * [安装](#安装)
     * [Hello World](#hello-world)
 * [修饰符](#修饰符)
+    * [default](#default)
+    * [private](#private)
+    * [public](#public)
     * [protected](#protected)
 
 
@@ -92,9 +95,97 @@ Hello World
 
 修饰符是 `Java` 中用于控制类、方法、变量等访问权限和行为的关键字。它们可以分为访问修饰符和非访问修饰符两大类。
 
+
+### default
+
+`default` 表示默认，什么也不写，在同一包内可见，不使用任何修饰符。使用对象：类、接口、变量、方法。
+
+如果在类、变量、方法或构造函数的定义中没有指定任何访问修饰符，那么它们就默认具有默认访问修饰符。
+
+默认访问修饰符的访问级别是包级别，即只能被同一包中的其他类访问。
+
+如下例所示，变量和方法的声明可以不使用任何修饰符。
+
+```java
+// MyClass.java
+ 
+class MyClass {  // 默认访问修饰符
+ 
+    int x = 10;  // 默认访问修饰符
+ 
+    void display() {  // 默认访问修饰符
+        System.out.println("Value of x is: " + x);
+    }
+}
+ 
+// MyOtherClass.java
+ 
+class MyOtherClass {
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.display();  // 访问 MyClass 中的默认访问修饰符变量和方法
+    }
+}
+```
+
+以上实例中，`MyClass` 类和它的成员变量 x 和方法 `display()` 都使用默认访问修饰符进行了定义。`MyOtherClass` 类在同一包中，因此可以访问 `MyClass` 类和它的成员变量和方法。
+
+### private
+
+在 `Java` 中，`private` 是最严格的访问控制修饰符，用于实现封装。它限定成员只能在 声明它的类内部被访问，外部包括子类和同包的其他类都无法访问。使用对象：变量、方法。
+
+```java
+public class Logger {
+   private String format;
+   public String getFormat() {
+      return this.format;
+   }
+   public void setFormat(String format) {
+      this.format = format;
+   }
+}
+```
+
+`private` 访问修饰符的使用主要用来隐藏类的实现细节和保护类的数据。
+
+### public
+
+在 `Java` 中，`public` 是访问权限最大的修饰符，表示可以被任何其他类访问，不受包和继承关系的限制。使用对象：类、接口、变量、方法
+
+被声明为 `public` 的类、方法、构造方法和接口能够被任何其他类访问。
+
+如果几个相互访问的 `public` 类分布在不同的包中，则需要导入相应 `public` 类所在的包。由于类的继承性，类所有的公有方法和变量都能被其子类继承。
+
+```java
+// 文件：people/Person.java
+package people;
+
+public class Person {
+    public String name = "Alice";       // public 字段
+
+    public void sayHello() {            // public 方法
+        System.out.println("Hello, I'm " + name);
+    }
+}
+
+// 文件：test/TestPerson.java
+package test;
+
+import people.Person;
+
+public class TestPerson {
+    public static void main(String[] args) {
+        Person p = new Person();
+        System.out.println(p.name);    // 合法访问 public 字段
+        p.sayHello();                  // 合法访问 public 方法
+    }
+}
+```
+
 ### protected
 
-在 `Java` 中，`protected` 是一种访问修饰符，用于控制类成员（属性、方法、构造器）的可见性。它的访问范围介于 `private` 和 `public` 之间，具体如下：
+在 `Java` 中，`protected` 是一种访问修饰符，使用对象：变量、方法，用于控制类成员（属性、方法、构造器）的可见性。
+它的访问范围介于 `private` 和 `public` 之间，具体如下：
 
 `protected` 的访问范围：
 
