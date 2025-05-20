@@ -14,6 +14,10 @@
     * [synchronized](#synchronized)
 * [类](#类)
     * [构造方法](#构造方法)
+    * [继承](#继承)
+    * [Override](#Override)
+    * [Overload](#Overload)
+    * [多态](#多态)
 
 
 
@@ -566,4 +570,384 @@ public Person(String name, int age) {
 ```
 
 构造方法是 `Java` 面向对象编程中非常重要的部分，通过使用构造方法可以有效控制对象的初始化过程，保证创建出的对象状态的完整性和一致性。
+
+
+### 继承
+
+在 `Java` 中通过 `extends` 关键字可以申明一个类是从另外一个类继承而来的，一般形式如下：
+
+```java
+class 父类 {
+}
+ 
+class 子类 extends 父类 {
+}
+```
+
+继承的特性:
+
+* 子类拥有父类非 `private` 的属性、方法;
+
+* 子类可以拥有自己的属性和方法，即子类可以对父类进行扩展;
+
+* 子类可以重写父类的方法，即子类可以对父类的方法进行修改;
+
+#### super 与 this
+
+**super**：我们可以通过 `super` 关键字来实现对父类成员的访问，用来引用当前对象的父类。
+
+**this**：指向自己的引用，引用当前对象，即它所在的方法或构造函数所属的对象实例。
+
+```java
+class Animal {
+    void eat() {
+        System.out.println("animal : eat");
+    }
+}
+ 
+class Dog extends Animal {
+    void eat() {
+        System.out.println("dog : eat");
+    }
+    void eatTest() {
+        this.eat();   // this 调用自己的方法
+        super.eat();  // super 调用父类方法
+    }
+}
+ 
+public class Test {
+    public static void main(String[] args) {
+        Animal a = new Animal();
+        a.eat();
+        Dog d = new Dog();
+        d.eatTest();
+    }
+}
+```
+
+输出结果为：
+
+```
+animal : eat
+dog : eat
+animal : eat
+```
+
+#### 子类构造器
+
+子类是不继承父类的构造器（构造方法或者构造函数）的，它只是调用（隐式或显式）。如果父类的构造器带有参数，
+则必须在子类的构造器中显式地通过 `super` 关键字调用父类的构造器并配以适当的参数列表。
+
+如果父类构造器没有参数，则在子类的构造器中不需要使用 `super` 关键字调用父类构造器，系统会自动调用父类的无参构造器。
+
+需要注意的是父类中 `private` 字段如何在子类中访问和修改。
+
+```java
+class SuperClass {
+    private int n;
+
+    // 无参数构造器
+    public SuperClass() {
+        System.out.println("SuperClass()");
+    }
+
+    // 带参数构造器
+    public SuperClass(int n) {
+        System.out.println("SuperClass(int n)");
+        this.n = n;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+}
+
+class SubClass extends SuperClass {
+    
+    // 无参数构造器，自动调用父类的无参数构造器
+    public SubClass() {
+        System.out.println("SubClass()");
+    }
+
+    // 带参数构造器，调用父类中带有参数的构造器
+    public SubClass(int n) {
+        super(300); // 调用父类构造器初始化 n = 300
+        System.out.println("SubClass(int n): " + n);
+        super.setN(n); // 修改为子类传入的 n
+    }
+}
+
+class SubClass2 extends SuperClass {
+
+    // 无参数构造器，调用父类中带有参数的构造器
+    public SubClass2() {
+        super(300);
+        System.out.println("SubClass2()");
+    }
+
+    // 带参数构造器，自动调用父类的无参数构造器
+    public SubClass2(int n) {
+        System.out.println("SubClass2(int n): " + n);
+        super.setN(n); // 修改为子类传入的 n
+    }
+}
+
+public class TestSuperSub {
+    public static void main(String[] args) {
+        System.out.println("------SubClass 类继承------");
+        SubClass sc1 = new SubClass();
+        SubClass sc2 = new SubClass(100);
+        System.out.println("SubClass2.n = " + sc2.getN());
+
+        System.out.println("------SubClass2 类继承------");
+        SubClass2 sc3 = new SubClass2();
+        SubClass2 sc4 = new SubClass2(200);
+        System.out.println("SubClass2.n = " + sc4.getN());
+    }
+}
+```
+
+输出结果为：
+
+```
+------SubClass 类继承------
+SuperClass()
+SubClass()
+SuperClass(int n)
+SubClass(int n): 100
+SubClass2.n = 100
+------SubClass2 类继承------
+SuperClass(int n)
+SubClass2()
+SuperClass()
+SubClass2(int n): 200
+SubClass2.n = 200
+```
+
+### Override
+
+重写（`Override`）是指子类定义了一个与其父类中具有相同名称、参数列表和返回类型的方法，并且子类方法的实现覆盖了父类方法的实现。即外壳不变，核心重写！
+
+重写方法不能抛出新的检查异常或者比被重写方法申明更加宽泛的异常。例如： 父类的一个方法申明了一个检查异常 `IOException`，
+但是在重写这个方法的时候不能抛出 `Exception` 异常，因为 `Exception` 是 `IOException` 的父类，抛出 `IOException` 异常或者 `IOException` 的子类异常。
+
+```java
+class Animal{
+   public void move(){
+      System.out.println("动物可以移动");
+   }
+}
+ 
+class Dog extends Animal{
+   public void move(){
+      System.out.println("狗可以跑和走");
+   }
+}
+ 
+public class TestDog{
+   public static void main(String args[]){
+      Animal a = new Animal(); // Animal 对象
+      Animal b = new Dog(); // Dog 对象
+ 
+      a.move();// 执行 Animal 类的方法
+ 
+      b.move();//执行 Dog 类的方法
+   }
+}
+```
+
+上面的例子中，之所以能编译成功，是因为 `Animal` 类中存在 `move` 方法，然而运行时，运行的是特定对象的方法。
+
+```java
+class Animal{
+   public void move(){
+      System.out.println("动物可以移动");
+   }
+}
+ 
+class Dog extends Animal{
+   public void move(){
+      System.out.println("狗可以跑和走");
+   }
+   public void bark(){
+      System.out.println("狗可以吠叫");
+   }
+}
+ 
+public class TestDog{
+   public static void main(String args[]){
+      Animal a = new Animal(); // Animal 对象
+      Animal b = new Dog(); // Dog 对象
+ 
+      a.move();// 执行 Animal 类的方法
+      b.move();//执行 Dog 类的方法
+      b.bark();
+   }
+}
+```
+
+编译运行结果如下:
+
+```java
+TestDog.java:30: cannot find symbol
+symbol  : method bark()
+location: class Animal
+                b.bark();
+                 ^
+```
+
+该程序将抛出一个编译错误，因为 b 的引用类型 `Animal` 没有 `bark` 方法。
+
+#### Super 关键字
+
+当需要在子类中调用父类的被重写方法时，要使用 super 关键字。
+
+```java
+class Animal{
+   public void move(){
+      System.out.println("动物可以移动");
+   }
+}
+ 
+class Dog extends Animal{
+   public void move(){
+      super.move(); // 应用super类的方法
+      System.out.println("狗可以跑和走");
+   }
+}
+ 
+public class TestDog{
+   public static void main(String args[]){
+ 
+      Animal b = new Dog(); // Dog 对象
+      b.move(); //执行 Dog类的方法
+ 
+   }
+}
+```
+输出结果为：
+
+```
+动物可以移动
+狗可以跑和走
+```
+
+### Overload
+
+重载(overloading) 是在一个类里面，方法名字相同，而参数不同。返回类型可以相同也可以不同。
+
+每个重载的方法（或者构造函数）都必须有一个独一无二的参数类型列表。最常用的地方就是构造器的重载。
+
+重载规则:
+
+* 被重载的方法必须改变参数列表(参数个数或类型不一样);
+
+* 被重载的方法可以改变返回类型；
+
+* 被重载的方法可以改变访问修饰符；
+
+* 被重载的方法可以声明新的或更广的检查异常；
+
+* 方法能够在同一个类中或者在一个子类中被重载；
+
+* 无法以返回值类型作为重载函数的区分标准；
+
+```java
+public class Overloading {
+    public int test(){
+        System.out.println("test1");
+        return 1;
+    }
+ 
+    public void test(int a){
+        System.out.println("test2");
+    }   
+ 
+    //以下两个参数类型顺序不同
+    public String test(int a,String s){
+        System.out.println("test3");
+        return "returntest3";
+    }   
+ 
+    public String test(String s,int a){
+        System.out.println("test4");
+        return "returntest4";
+    }   
+ 
+    public static void main(String[] args){
+        Overloading o = new Overloading();
+        System.out.println(o.test());
+        o.test(1);
+        System.out.println(o.test(1,"test3"));
+        System.out.println(o.test("test4",1));
+    }
+}
+```
+
+重写与重载之间的区别
+
+| 区别点     | 重载方法             | 重写方法                                                 |
+|-----------|---------------------|----------------------------------------------------------|
+| 参数列表   | 必须修改             | 一定不能修改                                             |
+| 返回类型   | 可以修改             | 一定不能修改                                             |
+| 异常      | 可以修改             | 可以减少或删除，一定不能抛出新的或者更广的异常         |
+| 访问      | 可以修改             | 一定不能做更严格的限制（可以降低限制）                 |
+
+
+### 多态
+
+多态是同一个行为具有多个不同表现形式或形态的能力。
+
+```java
+abstract class Animal {  
+    abstract void eat();  
+}  
+  
+class Cat extends Animal {  
+    public void eat() {  
+        System.out.println("吃鱼");  
+    }  
+    public void work() {  
+        System.out.println("抓老鼠");  
+    }  
+}  
+  
+class Dog extends Animal {  
+    public void eat() {  
+        System.out.println("吃骨头");  
+    }  
+    public void work() {  
+        System.out.println("看家");  
+    }  
+}
+
+public class Test {
+    public static void main(String[] args) {  
+        Cat a = new Cat();    
+        a.eat();              
+        a.work();
+
+        Animal b = new Dog();
+        b.eat();
+        // b.work();  // 这里会报错，因为 Animal 类没有 work() 方法
+        Dog c = (Dog) b; 
+        c.work();     // 现在可以调用 work() 方法了
+    }  
+}
+```
+
+输出结果为：
+
+```
+吃鱼
+抓老鼠
+吃骨头
+看家
+```
+
+当使用多态方式调用方法时，首先检查父类中是否有该方法，如果没有，则编译错误；如果有，再去调用子类的同名方法。
 
