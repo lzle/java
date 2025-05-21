@@ -15,9 +15,15 @@
 * [类](#类)
     * [构造方法](#构造方法)
     * [继承](#继承)
-    * [Override](#Override)
-    * [Overload](#Overload)
+    * [重写](#重写)
+    * [重载](#重载)
     * [多态](#多态)
+    * [多态](#多态)
+    * [抽象](#抽象)
+    * [封装](#封装)
+    * [接口](#接口)
+    * [枚举](#枚举)
+
 
 
 
@@ -728,7 +734,7 @@ SubClass2(int n): 200
 SubClass2.n = 200
 ```
 
-### Override
+### 重写
 
 重写（`Override`）是指子类定义了一个与其父类中具有相同名称、参数列表和返回类型的方法，并且子类方法的实现覆盖了父类方法的实现。即外壳不变，核心重写！
 
@@ -836,7 +842,7 @@ public class TestDog{
 狗可以跑和走
 ```
 
-### Overload
+### 重载
 
 重载(overloading) 是在一个类里面，方法名字相同，而参数不同。返回类型可以相同也可以不同。
 
@@ -951,3 +957,206 @@ public class Test {
 
 当使用多态方式调用方法时，首先检查父类中是否有该方法，如果没有，则编译错误；如果有，再去调用子类的同名方法。
 
+### 抽象
+
+在 `Java` 中，抽象类（abstract class） 是一种不能被实例化的类，用于作为其他类的父类，提供通用的字段和方法定义，并要求子类实现某些方法。
+
+```java
+abstract class Animal {
+    String name;
+
+    // 构造函数
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    // 抽象方法（没有方法体）
+    abstract void makeSound();
+
+    // 普通方法
+    public void sleep() {
+        System.out.println(name + " is sleeping...");
+    }
+}
+
+class Dog extends Animal {
+    public Dog(String name) {
+        super(name);
+    }
+
+    @Override
+    void makeSound() {
+        System.out.println(name + " says: Woof!");
+    }
+}
+
+public class TestAbstract {
+    public static void main(String[] args) {
+        Animal dog = new Dog("Buddy");
+        dog.makeSound();  // Buddy says: Woof!
+        dog.sleep();      // Buddy is sleeping...
+    }
+}
+```
+
+### 封装
+
+`Java` 中的 封装（Encapsulation） 是面向对象编程的核心特性之一。它的主要目标是将对象的状态（字段/成员变量）隐藏在内部，
+并通过公开的方法（get/set） 来访问或修改这些数据，从而保证数据安全性和一致性。
+
+要点
+
+* 将成员变量设为 private，防止外部直接访问。
+
+* 提供 public 的 getter 和 setter 方法。
+
+* 通过方法控制访问级别与有效性（例如：验证数据合法性）。
+
+```java
+public class Person {
+    // 私有字段
+    private String name;
+    private int age;
+
+    // 公有构造器
+    public Person(String name, int age) {
+        this.name = name;
+        setAge(age); // 使用 set 方法，包含合法性校验
+    }
+
+    // 公有 Getter
+    public String getName() {
+        return name;
+    }
+
+    // 公有 Setter
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // 公有 Getter
+    public int getAge() {
+        return age;
+    }
+
+    // 公有 Setter（带校验）
+    public void setAge(int age) {
+        if (age >= 0 && age <= 150) {
+            this.age = age;
+        } else {
+            System.out.println("年龄不合法！");
+        }
+    }
+
+    public void introduce() {
+        System.out.println("我是 " + name + "，今年 " + age + " 岁。");
+    }
+}
+
+public class TestPerson {
+    public static void main(String[] args) {
+        Person p = new Person("张三", 28);
+        p.introduce();
+
+        p.setAge(200); // 设置失败，非法数据
+        System.out.println("当前年龄：" + p.getAge());
+    }
+}
+```
+
+### 接口
+
+在 `Java` 中，接口（interface） 是一种抽象类型，用于定义类必须实现的一组方法。接口是 `Java` 实现多态和多继承的关键机制
+
+
+要点
+
+* 接口中的方法默认是 public abstract（即公开的、抽象的）。
+
+* 接口中的变量默认是 public static final（即常量）。
+
+* 类使用 implements 关键字来实现接口。
+
+* 一个类可以实现多个接口，实现接口是支持 多继承 的方式
+
+```java
+// 定义接口
+interface Animal {
+    void speak(); // 接口中的方法默认是 public abstract
+    String getType();
+}
+
+// 实现接口
+class Dog implements Animal {
+    @Override
+    public void speak() {
+        System.out.println("Dog barks.");
+    }
+
+    @Override
+    public String getType() {
+        return "Dog";
+    }
+}
+
+class Cat implements Animal {
+    @Override
+    public void speak() {
+        System.out.println("Cat meows.");
+    }
+
+    @Override
+    public String getType() {
+        return "Cat";
+    }
+}
+
+// 测试类
+public class TestInterface {
+    public static void main(String[] args) {
+        Animal a1 = new Dog();
+        Animal a2 = new Cat();
+
+        a1.speak(); // Dog barks.
+        a2.speak(); // Cat meows.
+        System.out.println(a1.getType()); // Dog
+    }
+}
+```
+
+### 枚举
+
+在 `Java` 中，enum（枚举）是一种特殊的类，用于定义常量集合。它是一种类型安全的方式来表示固定集合的值。
+
+```java
+enum Day {
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+}
+
+public class TestEnum {
+    public static void main(String[] args) {
+        Day today = Day.MONDAY;
+        System.out.println(today); // 输出：MONDAY
+
+        // 使用 switch 语句
+        switch (today) {
+            case MONDAY:
+                System.out.println("Start of the week");
+                break;
+            case FRIDAY:
+                System.out.println("Almost weekend");
+                break;
+            default:
+                System.out.println("Midweek");
+        }
+    }
+}
+```
+
+遍历所有枚举值
+
+```java
+for (Day day : Day.values()) {
+    System.out.println(day);
+}
+```
