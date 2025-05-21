@@ -12,6 +12,14 @@
     * [final](#final)
     * [abstract](#abstract)
     * [synchronized](#synchronized)
+* [流程控制](#流程控制)
+    * [while](#while)
+    * [do while](#do-while)
+    * [for](#for)
+    * [break](#break)
+    * [continue](#continue)
+    * [if else](#if-else)
+    * [switch case](#switch-case)
 * [类](#类)
     * [构造方法](#构造方法)
     * [继承](#继承)
@@ -451,6 +459,177 @@ class SubClass extends SuperClass{
 ### synchronized
 
 `synchronized` 关键字声明的方法同一时间只能被一个线程访问。
+
+
+## 流程控制
+
+### while
+
+`while` 循环是 `Java` 中的一种循环控制结构，用于在满足特定条件时重复执行一段代码。它的基本语法如下：
+
+```java
+while( 布尔表达式 ) {
+  //循环内容
+}
+```
+
+`while` 循环的执行过程如下：
+
+```java
+public class Test {
+   public static void main(String[] args) {
+      int x = 10;
+      while( x < 20 ) {
+         System.out.print("value of x : " + x );
+         x++;
+         System.out.print("\n");
+      }
+   }
+}
+```
+
+### do while
+
+`do while` 循环是 `Java` 中的一种循环控制结构，与 `while` 循环类似，但它至少会执行一次循环体。它的基本语法如下：
+
+```java
+do {
+  //循环内容
+} while( 布尔表达式 );
+```
+
+`do while` 循环的执行过程如下：
+
+```java
+public class Test {
+   public static void main(String[] args){
+      int x = 10;
+ 
+      do{
+         System.out.print("value of x : " + x );
+         x++;
+         System.out.print("\n");
+      }while( x < 10 );
+   }
+}
+
+// 输出结果
+// value of x : 10
+```
+
+### for
+
+`for` 循环是 `Java` 中的一种循环控制结构，用于在满足特定条件时重复执行一段代码。它的基本语法如下：
+
+```java
+for (初始化; 布尔表达式; 更新) {
+  //循环内容
+}
+```
+
+`for` 循环的执行过程如下：
+
+```java
+public class Test {
+   public static void main(String[] args) {
+ 
+      for(int x = 10; x < 20; x = x+1) {
+         System.out.print("value of x : " + x );
+         System.out.print("\n");
+      }
+   }
+}
+```
+
+### break
+
+`break` 主要用在循环语句或者 `switch` 语句中，用来跳出整个语句块。
+
+### continue
+
+`continue` 主要用在循环语句中，用来跳过当前循环的剩余部分，直接进入下一次循环。
+
+### if else
+
+`if else` 语句是 `Java` 中的一种条件控制结构。
+
+```java
+public class Test {
+   public static void main(String args[]){
+      int x = 30;
+      if( x == 10 ){
+         System.out.print("Value of X is 10");
+      }else if( x == 20 ){
+         System.out.print("Value of X is 20");
+      }else if( x == 30 ){
+         System.out.print("Value of X is 30");
+      }else{
+         System.out.print("这是 else 语句");
+      }
+   }
+}
+```
+
+### switch case
+
+`switch case` 执行时，一定会先进行匹配，匹配成功返回当前 `case` 的值，再根据是否有 `break`，判断是否继续输出。
+
+```java
+public class Test {
+   public static void main(String args[]){
+      //char grade = args[0].charAt(0);
+      char grade = 'B';
+ 
+      switch(grade)
+      {
+         case 'A' :
+            System.out.println("优秀"); 
+            break;
+         case 'B' :
+         case 'C' :
+            System.out.println("良好");
+         case 'D' :
+            System.out.println("及格");
+            break;
+         case 'F' :
+            System.out.println("你需要再努力努力");
+            break;
+         default :
+            System.out.println("未知等级");
+      }
+      System.out.println("你的等级是 " + grade);
+   }
+}
+
+// 良好
+// 及格
+// 你的等级是 B
+```
+
+如果当前匹配成功的 `case` 语句块没有 `break` 语句，则从当前 `case` 开始，后续所有 `case` 的值都会输出。
+
+```java
+public class Test {
+   public static void main(String args[]){
+      int i = 2;
+      switch(i){
+         case 0:
+            System.out.println("0");
+         case 1:
+            System.out.println("1");
+         case 2:
+            System.out.println("2");
+         default:
+            System.out.println("default");
+      }
+   }
+}
+
+// 2
+// default
+```
+
+如果都不匹配走 `default`，如果没有 `default` 语句，则不执行任何语句。
 
 
 ## 类
@@ -1158,5 +1337,5 @@ public class TestEnum {
 ```java
 for (Day day : Day.values()) {
     System.out.println(day);
-}
+}  
 ```
